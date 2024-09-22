@@ -20,7 +20,32 @@ export default function Content() {
     setUrl(e.target.value);
   };
   const handleSubmit = (e) => {
+    const apiKey = import.meta.env.VITE_API_KEY;
     e.preventDefault();
+  
+    axios
+      .post(
+        'https://api.tinyurl.com/create',
+        {
+          url: url,
+          domain: 'tinyurl.com',
+          description: 'Link description',
+        },
+        {
+          headers: {
+            accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${apiKey}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log('Success:', response.data);
+        setUrl("");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
   return (
     <div>
@@ -51,6 +76,7 @@ export default function Content() {
               placeholder="URL"
               type="text"
               onChange={onChange}
+              value={url}
             />
           </Col>
           <Col>
